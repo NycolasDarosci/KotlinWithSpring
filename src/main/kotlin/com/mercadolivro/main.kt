@@ -1,4 +1,4 @@
-package com.mercadolivro
+package com.mercadolivro/*package com.mercadolivro
 
 import com.mercadolivro.model.Customer
 
@@ -11,3 +11,4 @@ fun main(){
 
     println(another)
 }
+*/

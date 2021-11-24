@@ -1,5 +1,7 @@
 package com.mercadolivro.model
 
+import javax.persistence.*
+
 /*
     não é incomum criar classe com objetivo de reter dados(hold data).
     Algumas funcionalidades padrões e algumas funções de utilidade são,
@@ -12,8 +14,17 @@ package com.mercadolivro.model
         - funções ComponentN() correspondentes às propriedades em sua ordem de declaração;
         - função copy()
 */
+@Entity
+@Table(name = "customer")
 data class Customer(
-    var id: String,
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int? = null,
+
+    @Column(name =  "name")
     var name: String,
+
+    @Column(name = "email")
     var email: String
 )

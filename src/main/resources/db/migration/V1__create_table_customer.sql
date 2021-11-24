@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS customer (
+	id INT auto_increment PRIMARY KEY NOT NULL,
+	name VARCHAR(255) NULL,
+	email VARCHAR(255) UNIQUE NULL
+);

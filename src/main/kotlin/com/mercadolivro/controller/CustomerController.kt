@@ -2,6 +2,7 @@ package com.mercadolivro.controller
 
 import com.mercadolivro.controller.request.PostCustomerRequest
 import com.mercadolivro.controller.request.PutCustomerRequest
+import com.mercadolivro.extension.toCustomer
 import com.mercadolivro.model.Customer
 import com.mercadolivro.service.CustomerService
 import org.springframework.http.HttpStatus
@@ -31,7 +32,7 @@ class CustomerController(
     }
 
     @GetMapping("/{id}")
-    fun getCustomer(@PathVariable("id") id: String): ResponseEntity<Customer>{
+    fun getCustomer(@PathVariable("id") id: Int): ResponseEntity<Customer>{
 
         val idCustomer = customerService.getCustomer(id)
 
@@ -39,9 +40,9 @@ class CustomerController(
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable("id") id: String, @RequestBody customer: PutCustomerRequest): ResponseEntity<Customer>{
+    fun update(@PathVariable("id") id: Int, @RequestBody customer: PutCustomerRequest): ResponseEntity<Customer>{
 
-        customerService.update(id, customer)
+        customerService.update(customer.toCustomer(id))
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }
@@ -49,13 +50,13 @@ class CustomerController(
     @PostMapping("create")
     fun create(@RequestBody customer: PostCustomerRequest): ResponseEntity<Any>{
 
-        customerService.create(customer)
+        customerService.create(customer.toCustomer())
 
         return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable("id") id: String): ResponseEntity<Any>{
+    fun delete(@PathVariable("id") id: Int): ResponseEntity<Any>{
 
         customerService.delete(id)
 

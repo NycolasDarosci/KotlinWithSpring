@@ -44,8 +44,7 @@ class CustomerService {
 
     fun create( customer: PostCustomerRequest) {
 
-        val id = if (customers.isEmpty()) 1
-                else { customers.last().id.toInt() + 1 }.toString()
+        val id = if (customers.isEmpty()) 1 else { customers.last().id.toInt() + 1 }.toString()
 
         customers.add(Customer(id, customer.name, customer.email))
     }

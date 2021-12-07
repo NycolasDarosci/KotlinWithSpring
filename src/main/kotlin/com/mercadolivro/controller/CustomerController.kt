@@ -41,8 +41,8 @@ class CustomerController(
 
     @PutMapping("/{id}")
     fun update(@PathVariable("id") id: Int, @RequestBody customer: PutCustomerRequest): ResponseEntity<Customer>{
-
-        customerService.update(customer.toCustomer(id))
+        val customerSaved = customerService.getCustomer(id)
+        customerService.update(customer.toCustomer(customerSaved))
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build()
     }

@@ -27,10 +27,6 @@ data class Book(
     @Column(name = "price")
     var price: BigDecimal,
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    var status: BookStatus? = null,
-
     /*
         ManyToOne - Muitos livros pertencem a um customer
         customer_id pertence à chave secundaria na tabela book sql
@@ -39,5 +35,30 @@ data class Book(
     @JoinColumn(name = "customer_id")
     var customer: Customer? = null
 
-    )
+) {
+    /*
+        field - valor atual do campo
+        value - novo valor a ser usado
+    */
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    var status: BookStatus? = null
+        set(value) {
+            if(field == BookStatus.CANCELADO || field == BookStatus.DELETADO)
+                throw Exception("Não pode alterar o status quando estiver $field")
+
+            field = value
+        }
+
+    constructor(
+        id: Int? = null,
+        name: String,
+        price: BigDecimal,
+        customer: Customer? = null,
+        status: BookStatus?
+    ) : this(id, name, price, customer) {
+        this.status = status
+    }
+
+}
 

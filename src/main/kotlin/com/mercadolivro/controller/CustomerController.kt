@@ -2,9 +2,13 @@ package com.mercadolivro.controller
 
 import com.mercadolivro.controller.request.PostCustomerRequest
 import com.mercadolivro.controller.request.PutCustomerRequest
+import com.mercadolivro.controller.response.CustomerResponse
 import com.mercadolivro.extension.toCustomer
-import com.mercadolivro.model.Customer
+import com.mercadolivro.extension.toResponse
 import com.mercadolivro.service.CustomerService
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -24,23 +28,24 @@ class CustomerController(
 )
 {
     @GetMapping
-    fun getAllCustomers(@RequestParam name: String?): ResponseEntity<List<Customer>>{
-
-        val getAll = customerService.getAllCustomers(name)
+    fun getAllCustomers(
+        @RequestParam name: String?,
+        @PageableDefault(size = 10, page = 0) pageable: Pageable
+    ): ResponseEntity<Page<CustomerResponse>> {
+        val getAll = customerService.getAllCustomers(name, pageable).map { it.toResponse() }
 
         return ResponseEntity.ok().body(getAll)
     }
 
     @GetMapping("/{id}")
-    fun getCustomer(@PathVariable("id") id: Int): ResponseEntity<Customer>{
-
-        val idCustomer = customerService.getCustomer(id)
+    fun getCustomer(@PathVariable("id") id: Int): ResponseEntity<CustomerResponse> {
+        val idCustomer = customerService.getCustomer(id).toResponse()
 
         return ResponseEntity.ok().body(idCustomer)
     }
 
     @PutMapping("/{id}")
-    fun update(@PathVariable("id") id: Int, @RequestBody customer: PutCustomerRequest): ResponseEntity<Customer>{
+    fun update(@PathVariable("id") id: Int, @RequestBody customer: PutCustomerRequest): ResponseEntity<Any>{
         val customerSaved = customerService.getCustomer(id)
         customerService.update(customer.toCustomer(customerSaved))
 

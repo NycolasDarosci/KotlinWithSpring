@@ -2,21 +2,18 @@ package com.mercadolivro.controller
 
 import com.mercadolivro.controller.request.PostBookRequest
 import com.mercadolivro.controller.request.PutBookRequest
+import com.mercadolivro.controller.response.BookResponse
 import com.mercadolivro.extension.toBook
-import com.mercadolivro.model.Book
+import com.mercadolivro.extension.toResponse
 import com.mercadolivro.service.BookService
 import com.mercadolivro.service.CustomerService
-import org.apache.coyote.Response
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+
 @RestController
 @RequestMapping("book")
 class BookController(
@@ -24,27 +21,25 @@ class BookController(
     val customerService: CustomerService
 ) {
     @GetMapping
-    fun getAllBooks(): ResponseEntity<List<Book>>{
-        return ResponseEntity.ok().body(bookService.getAllBooks())
+    fun getAllBooks(@PageableDefault(page = 0, size = 10) pageable: Pageable): ResponseEntity<Page<BookResponse>> {
+        val response = bookService.getAllBooks(pageable).map { it.toResponse() }
+        return ResponseEntity.ok().body(response)
     }
 
     @GetMapping("/active")
-    fun getBooksByStatusActive() : ResponseEntity<List<Book>> {
-        return ResponseEntity.ok().body(bookService.findByStatusActive())
-    }
-
-    @GetMapping("/cancelled")
-    fun getBooksByStatusCancelled() : ResponseEntity<List<Book>> {
-        return ResponseEntity.ok().body(bookService.findByStatusCancelled())
+    fun getBooksByStatusActive(@PageableDefault(page = 0, size = 10) pageable: Pageable) : ResponseEntity<Page<BookResponse>> {
+        val response = bookService.findByStatusActive(pageable).map { it.toResponse() }
+        return ResponseEntity.ok().body(response)
     }
 
     @GetMapping("/{id}")
-    fun getBookById(@PathVariable("id") id: Int) : ResponseEntity<Book>{
-        return ResponseEntity.ok().body(bookService.findById(id))
+    fun getBookById(@PathVariable("id") id: Int) : ResponseEntity<BookResponse>{
+        val response = bookService.findById(id).toResponse()
+        return ResponseEntity.ok().body(response)
     }
 
     @PostMapping("/create")
-    fun create(@RequestBody request: PostBookRequest): ResponseEntity<Book> {
+    fun create(@RequestBody request: PostBookRequest): ResponseEntity<Any> {
         val id = customerService.getCustomer(request.customerId)
         bookService.create(request.toBook(id))
         return ResponseEntity.status(HttpStatus.CREATED).build()

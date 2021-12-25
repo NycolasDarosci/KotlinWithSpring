@@ -1,8 +1,12 @@
 package com.mercadolivro.service
 
 import com.mercadolivro.enums.CustomerStatus
+import com.mercadolivro.enums.Errors
+import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.model.Customer
 import com.mercadolivro.repository.CustomerRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -13,13 +17,13 @@ class CustomerService(
 
     //private val customers = mutableListOf<Customer>()
 
-    fun getAllCustomers(name: String?): List<Customer>{
+    fun getAllCustomers(name: String?, pageable: Pageable): Page<Customer>{
 
         name?.let {
-            return customerRepository.findByNameContaining(it)
+            return customerRepository.findByNameContaining(it, pageable)
         }
 
-        return customerRepository.findAll().toList()
+        return customerRepository.findAll(pageable)
 
         /*
             Está verificando(name?) se o nome não vier nulo,
@@ -40,7 +44,12 @@ class CustomerService(
 
     fun getCustomer( id: Int): Customer {
 
-        return customerRepository.findById(id).orElseThrow()
+        return customerRepository.findById(id)
+            .orElseThrow {
+                NotFoundException(
+                    message = Errors.ML201.message.format(id),
+                    errorCode = Errors.ML201.code)
+            }
 
         /*
         val id = customers.filter { it.id == id }.first()

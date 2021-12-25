@@ -9,3 +9,8 @@ spring:
       ddl-auto: update
     generate-ddl: false
     show-sql: true
+
+  # config do spring
+  # jackson que faz as serializações e desarializações, quem transforma em json os objetos
+  jackson:
+    default-property-inclusion: non_null

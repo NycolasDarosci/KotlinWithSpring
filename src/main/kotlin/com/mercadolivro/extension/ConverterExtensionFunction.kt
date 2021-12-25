@@ -4,6 +4,8 @@ import com.mercadolivro.controller.request.PostBookRequest
 import com.mercadolivro.controller.request.PostCustomerRequest
 import com.mercadolivro.controller.request.PutBookRequest
 import com.mercadolivro.controller.request.PutCustomerRequest
+import com.mercadolivro.controller.response.BookResponse
+import com.mercadolivro.controller.response.CustomerResponse
 import com.mercadolivro.enums.BookStatus
 import com.mercadolivro.enums.CustomerStatus
 import com.mercadolivro.model.Book
@@ -17,6 +19,10 @@ import com.mercadolivro.model.Customer
     There are also extension properties that let you define new properties for existing classes.
 
 */
+
+/**
+ * Customer converters
+ */
 fun PostCustomerRequest.toCustomer(): Customer {
     return Customer(
         name = this.name,
@@ -33,6 +39,19 @@ fun PutCustomerRequest.toCustomer(customerSaved: Customer): Customer {
         status = this.status ?: customerSaved.status
     )
 }
+
+fun Customer.toResponse() : CustomerResponse {
+    return CustomerResponse(
+        id = this.id,
+        name = this.name,
+        email = this.email,
+        status = this.status
+    )
+}
+
+/**
+ * Book converters
+ */
 
 fun PostBookRequest.toBook(customer: Customer): Book {
     return Book(
@@ -54,5 +73,15 @@ fun PutBookRequest.toBook(previousValue: Book): Book {
         price = this.price ?: previousValue.price,
         customer = previousValue.customer,
         status = previousValue.status,
+    )
+}
+
+fun Book.toResponse() : BookResponse {
+    return BookResponse(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        customer = this.customer,
+        status = this.status
     )
 }

@@ -12,4 +12,5 @@ interface CustomerRepository: CrudRepository<Customer, Int> {
     fun findByNameContaining(name: String, pageable: Pageable): Page<Customer>
 
     fun findAll(pageable: Pageable): Page<Customer>
+    fun existsByEmail(value: String) : Boolean
 }

@@ -97,4 +97,13 @@ class CustomerService(
 
         //customers.removeIf { it.id == id }
     }
+
+    fun emailAvailable(email: String): Boolean {
+        /**
+         *  verificar se existe o email
+         *  se existir, retorna 'false', porque não esta disponível,
+         *  se não existir, retorna 'true', porque está disponível
+         */
+        return !customerRepository.existsByEmail(email)
+    }
 }

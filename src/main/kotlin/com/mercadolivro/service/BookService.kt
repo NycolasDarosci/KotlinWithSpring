@@ -2,6 +2,7 @@ package com.mercadolivro.service
 
 import com.mercadolivro.enums.BookStatus
 import com.mercadolivro.enums.Errors
+import com.mercadolivro.exception.BadRequestException
 import com.mercadolivro.exception.NotFoundException
 import com.mercadolivro.model.Book
 import com.mercadolivro.model.Customer
@@ -49,5 +50,9 @@ class BookService(
         }
         bookRepository.saveAll(books)
     }
+
+    fun findAllById(bookIds: Set<Int>): List<Book> =
+        bookRepository.findAllById(bookIds)
+
 
 }

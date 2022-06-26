@@ -27,7 +27,8 @@ fun PostCustomerRequest.toCustomer(): Customer {
     return Customer(
         name = this.name,
         email = this.email,
-        status = CustomerStatus.ATIVO
+        status = CustomerStatus.ATIVO,
+        password = this.password
     )
 }
 
@@ -36,7 +37,8 @@ fun PutCustomerRequest.toCustomer(customerSaved: Customer): Customer {
         id = customerSaved.id ,
         name = this.name,
         email = this.email,
-        status = this.status ?: customerSaved.status
+        status = this.status ?: customerSaved.status,
+        password = customerSaved.password
     )
 }
 
@@ -58,16 +60,12 @@ fun PostBookRequest.toBook(customer: Customer): Book {
         name = this.name,
         price = this.price,
         customer = customer,
-        status = BookStatus.ATIVO,
+        status = BookStatus .ATIVO,
     )
 }
 
 fun PutBookRequest.toBook(previousValue: Book): Book {
     return Book(
-        /*
-            elvis operator ?:
-            se o valor a esquerda for nula, retorna o valor a direita e vice-versa
-        */
         id = previousValue.id,
         name = this.name ?: previousValue.name,
         price = this.price ?: previousValue.price,

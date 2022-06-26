@@ -13,9 +13,13 @@ class PurchaseService(
 ) {
 
     fun create(purchase: Purchase) {
+
         repository.save(purchase)
 
         publicEventPublisher.publishEvent(PurchaseEvent(this, purchase))
     }
+
+    fun update(purchaseModel: Purchase) =
+        repository.save(purchaseModel)
 
 }

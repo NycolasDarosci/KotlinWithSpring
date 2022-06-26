@@ -31,5 +31,8 @@ data class Customer(
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    var status: CustomerStatus
+    var status: CustomerStatus,
+
+    @Column
+    var password: String
 )

@@ -1,7 +1,9 @@
 package com.mercadolivro.model
 
+import com.mercadolivro.enums.BookStatus.DELETADO
+import com.mercadolivro.enums.BookStatus.CANCELADO
 import com.mercadolivro.enums.BookStatus
-import com.mercadolivro.enums.Errors
+import com.mercadolivro.enums.Errors.ML102
 import com.mercadolivro.exception.BadRequestException
 import java.math.BigDecimal
 import javax.persistence.Column
@@ -18,24 +20,24 @@ import javax.persistence.Table
 @Entity
 @Table(name = "book")
 data class Book(
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null,
+        @Id
+        @Column(name = "id")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        var id: Int? = null,
 
-    @Column(name = "name")
-    var name: String,
+        @Column(name = "name")
+        var name: String,
 
-    @Column(name = "price")
-    var price: BigDecimal,
+        @Column(name = "price")
+        var price: BigDecimal,
 
-    /*
-        ManyToOne - Muitos livros pertencem a um customer
-        customer_id pertence à chave secundaria na tabela book sql
-    */
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    var customer: Customer? = null
+        /*
+            ManyToOne - Muitos livros pertencem a um customer
+            customer_id pertence à chave secundaria na tabela book sql
+        */
+        @ManyToOne
+        @JoinColumn(name = "customer_id")
+        var customer: Customer? = null
 
 ) {
     /*
@@ -45,19 +47,22 @@ data class Book(
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     var status: BookStatus? = null
-        set(value) {
-            if(field == BookStatus.CANCELADO || field == BookStatus.DELETADO)
-                throw BadRequestException(message = Errors.ML102.message.format(field), errorCode = Errors.ML102.code)
-
+        set (value) {
+            if (field == CANCELADO || field == DELETADO) {
+                throw BadRequestException(
+                        message = ML102.message.format(field),
+                        errorCode = ML102.code
+                )
+            }
             field = value
         }
 
     constructor(
-        id: Int? = null,
-        name: String,
-        price: BigDecimal,
-        customer: Customer? = null,
-        status: BookStatus?
+            id: Int? = null,
+            name: String,
+            price: BigDecimal,
+            customer: Customer? = null,
+            status: BookStatus?
     ) : this(id, name, price, customer) {
         this.status = status
     }

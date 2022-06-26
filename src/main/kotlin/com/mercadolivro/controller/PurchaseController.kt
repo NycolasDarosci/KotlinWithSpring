@@ -19,10 +19,10 @@ class PurchaseController(
 ) {
 
     @PostMapping
-    fun purchase(@RequestBody @Valid request: PostPurchaseRequest) {
-        service.create(mapper.toModel(request))
+    fun purchase(@RequestBody @Valid request: PostPurchaseRequest) : ResponseEntity<Any> {
+        val response = service.create(mapper.toModel(request))
 
-        ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
 }
